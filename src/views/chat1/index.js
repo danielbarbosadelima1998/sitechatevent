@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { TextField, makeStyles } from "@material-ui/core";
 
 import { events } from "../../service/events";
 
-import Message from "../../components/message";
-
-const msg = require("../../service/messages");
 // style
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,27 +34,30 @@ const Chat1 = () => {
 
   // States
   const [message, setMessage] = useState();
+  const [arrayMessage, setArrayMessage] = useState([]);
+
+  useEffect(() => {
+    events.on("pushMessage", text => setArrayMessage([...arrayMessage, text]));
+  });
 
   // HandleSubmit
   const handleSubmit = e => {
     e.preventDefault();
-    msg.push({ name: "daniel", message });
-    console.log(msg);
-    //events.emit("message1", message); //emitindo as mensagems do chat 1  para o 2
+    events.emit("message", message); //emitindo as mensagems do chat 1  para o 2
   };
-
-  // Eventos
-
-  //events.on("message2", ) //ouvindo as mensagems do chat 2
 
   return (
     <div style={{ width: "50%", margin: "0 10px" }}>
       <h1>Chat1</h1>
 
       <div style={style.divMain}>
-        {msg.map((item,index) => 
-          <p key={index}> name= {item.name} message= {item.message} </p>
-        )}
+        {arrayMessage &&
+          arrayMessage.map((item, index) => (
+            <p key={index}>
+              {" "}
+              name= {item.name} message= {item.message}{" "}
+            </p>
+          ))}
 
         <form
           onSubmit={e => handleSubmit(e)}

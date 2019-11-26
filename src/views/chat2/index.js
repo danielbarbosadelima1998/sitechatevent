@@ -1,4 +1,4 @@
-import React, {  useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { events } from "../../service/events";
 
@@ -15,22 +15,25 @@ const style = {
 };
 
 const Chat2 = () => {
-  events.setMaxListeners(0);
-  const [array, setArray] = useState([]);
- 
-  //events.on("pushMessage", );
-  // states
-  // const [messageReceived, setMessageReceived] = useState();
+  const [arrayMessage, setArrayMessage] = useState([]);
 
-
-    events.on("message1", text => setArray([...array, {name: 'Dani', message: text}]))
- 
+  useEffect(() => {
+    events.on("pushMessage", text => setArrayMessage([...arrayMessage, text]));
+  });
 
   return (
     <div>
       <h1>Chat2</h1>
 
-      <div style={style.divMain}>mensagem Recebida: {array.map((item,index) => <p key={index}> {item.name}: {item.message} </p>)} </div>
+      <div style={style.divMain}>
+        {arrayMessage &&
+          arrayMessage.map((item, index) => (
+            <p key={index}>
+              {" "}
+              name= {item.name} message= {item.message}{" "}
+            </p>
+          ))}
+      </div>
     </div>
   );
 };
